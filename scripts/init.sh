@@ -8,17 +8,27 @@
 
 echo "Initializing irixboot..."
 
+echo "Renaming machine to 'irixboot'..."
+echo "irixboot" > /etc/hostname
+cp /etc/hosts.orig /etc/hosts
+sed -i 's/contrib-jessie/irixboot/g' /etc/hosts
+/etc/init.d/hostname.sh
+invoke-rc.d rsyslog restart
+
+### keep a copy of the hosts file for subsequent boots
+cp /etc/hosts /etc/hosts.irixboot
+
 echo "Installing packages..."
-apt-get -yqq install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump
+apt-get -qq -y install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump > /dev/null
 
 ### disable upstream nameserver (now that we don't need it anymore)
 sed -i 's/^nameserver/#nameserver/' /etc/resolv.conf
 
-### keep a copy of the original hosts file for subsequent boots
-cp /etc/hosts /etc/hosts.orig
+### only bind to our bridge interface for dnsmasq & dhcp
+sed -i 's/^#interface.*/interface=eth1/' /etc/dnsmasq.conf
+sed -i 's/INTERFACES.*/INTERFACES=eth1/' /etc/default/isc-dhcp-server
 
 echo "Adjusting kernel IPv4 settings..."
-### Adjust IPv4 kernel settings to agree with SGI
 echo << EOF >> /etc/sysctl.conf
 net.ipv4.ip_no_pmtu_disc = 1
 net.ipv4.ip_local_port_range = 2048 32767
@@ -27,27 +37,24 @@ EOF
 sysctl -p
 
 echo "Enabling efs/xfs kernel modules..."
-### Enable filesystems we'll need later
 echo "efs" >> /etc/modules
 echo "xfs" >> /etc/modules
 modprobe -a efs xfs
 
 echo "Disabling services..."
-### Disable & stop services until we are ready (start them in boot.sh)
-invoke-rc.d openbsd-inetd stop
-update-rc.d openbsd-inetd disable
-invoke-rc.d isc-dhcp-server stop
-update-rc.d isc-dhcp-server disable
-invoke-rc.d tftpd-hpa stop
-update-rc.d tftpd-hpa disable
-invoke-rc.d dnsmasq stop
-update-rc.d dnsmasq disable
+invoke-rc.d openbsd-inetd stop > /dev/null 2&>1
+update-rc.d openbsd-inetd disable > /dev/null 2&>1
+invoke-rc.d isc-dhcp-server stop > /dev/null 2&>1
+update-rc.d isc-dhcp-server disable > /dev/null 2&>1
+invoke-rc.d tftpd-hpa stop > /dev/null 2&>1
+update-rc.d tftpd-hpa disable > /dev/null 2&>1
+invoke-rc.d dnsmasq stop > /dev/null 2&>1
+update-rc.d dnsmasq disable > /dev/null 2&>1
 
-### Configure tftpd directory
 echo "Configuring tftpd-hpa..."
+mkdir /irix
 sed -i 's/^TFTP_DIRECTORY.*$/TFTP_DIRECTORY="\/irix"/' /etc/default/tftpd-hpa
 sed -i 's/^TFTP_OPTIONS.*$/TFTP_OPTIONS=\"--secure -vvvv\"/' /etc/default/tftpd-hpa
 
-
-
-echo "Initialization complete."
+echo "Creating 'guest' user..."
+if ! id -u guest >/dev/null 2>&1; then useradd -s /bin/ksh -d /irix guest; fi

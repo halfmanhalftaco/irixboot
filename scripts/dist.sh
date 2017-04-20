@@ -63,14 +63,11 @@ function copydist {
 	done
 	
 	echo $IRIXVERS > /irix/.irixboot
-	
-	### Create user that the IRIX installer will rsh as (guest) and assign ownership
-	if ! id -u guest >/dev/null 2>&1; then useradd -s /bin/ksh -d /irix guest; fi
 	chown -R guest.guest /irix
 }
 
 ### Check if disk is already mounted from previous provisioning
-### and check whether it is the correction version
+### and check whether it is the correct version
 echo "Checking IRIX distribution..."
 
 if [ -f /irix/.irixboot ]; then

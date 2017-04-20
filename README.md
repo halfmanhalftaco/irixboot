@@ -47,12 +47,16 @@ Set this to the version of IRIX you are installing. You must create a subdirecto
 
 ```
 clientname = 'indy'
-clientdomain = 'sgi.halfmanhalftaco.com'
 clientip = '192.168.42.100'
 clientether = '08:00:69:CA:FE:42'
-netmask = '255.255.255.0'
 ```
 These should be obvious - the network parameters for the target SGI machine.
+
+```
+domain = 'sgi.halfmanhalftaco.com'
+netmask = '255.255.255.0'
+```
+These are the common network parameters for your subnet.
 
 ```
 hostip = '192.168.42.5'
