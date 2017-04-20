@@ -1,0 +1,7 @@
+*.iso
+*.img
+*.cdr
+._*
+installdisk.vdi
+.vagrant
+.idea
