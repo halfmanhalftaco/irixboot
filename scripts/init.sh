@@ -10,7 +10,6 @@ echo "Initializing irixboot..."
 
 echo "Renaming machine to 'irixboot'..."
 echo "irixboot" > /etc/hostname
-cp /etc/hosts.orig /etc/hosts
 sed -i 's/contrib-jessie/irixboot/g' /etc/hosts
 /etc/init.d/hostname.sh
 invoke-rc.d rsyslog restart
@@ -19,7 +18,7 @@ invoke-rc.d rsyslog restart
 cp /etc/hosts /etc/hosts.irixboot
 
 echo "Installing packages..."
-apt-get -qq -y install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump > /dev/null
+apt-get -qq -y install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump
 
 ### disable upstream nameserver (now that we don't need it anymore)
 sed -i 's/^nameserver/#nameserver/' /etc/resolv.conf

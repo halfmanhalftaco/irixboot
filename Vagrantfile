@@ -46,5 +46,5 @@ Vagrant.configure("2") do |config|
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
   config.vm.provision "shell", path: "scripts/init.sh"
   config.vm.provision "shell", path: "scripts/dist.sh", run: 'always', args: irixversion
-  config.vm.provision "shell", path: "scripts/boot.sh", run: 'always', args: [clientname, clientdomain, hostip, clientip, clientether, netmask]
+  config.vm.provision "shell", path: "scripts/boot.sh", run: 'always', args: [clientname, clientip, clientether, clientdomain, netmask, hostip]
 end
