@@ -41,14 +41,14 @@ echo "xfs" >> /etc/modules
 modprobe -a efs xfs
 
 echo "Disabling services..."
-invoke-rc.d openbsd-inetd stop > /dev/null 2&>1
-update-rc.d openbsd-inetd disable > /dev/null 2&>1
-invoke-rc.d isc-dhcp-server stop > /dev/null 2&>1
-update-rc.d isc-dhcp-server disable > /dev/null 2&>1
-invoke-rc.d tftpd-hpa stop > /dev/null 2&>1
-update-rc.d tftpd-hpa disable > /dev/null 2&>1
-invoke-rc.d dnsmasq stop > /dev/null 2&>1
-update-rc.d dnsmasq disable > /dev/null 2&>1
+invoke-rc.d openbsd-inetd stop > /dev/null 2>&1
+update-rc.d openbsd-inetd disable > /dev/null 2>&1
+invoke-rc.d isc-dhcp-server stop > /dev/null 2>&1
+update-rc.d isc-dhcp-server disable > /dev/null 2>&1
+invoke-rc.d tftpd-hpa stop > /dev/null 2>&1
+update-rc.d tftpd-hpa disable > /dev/null 2>&1
+invoke-rc.d dnsmasq stop > /dev/null 2>&1
+update-rc.d dnsmasq disable > /dev/null 2>&1
 
 echo "Configuring tftpd-hpa..."
 mkdir /irix
