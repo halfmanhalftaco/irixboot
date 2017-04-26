@@ -28,11 +28,8 @@ sed -i 's/^#interface.*/interface=eth1/' /etc/dnsmasq.conf
 sed -i 's/INTERFACES.*/INTERFACES=eth1/' /etc/default/isc-dhcp-server
 
 echo "Adjusting kernel IPv4 settings..."
-echo << EOF >> /etc/sysctl.conf
-net.ipv4.ip_no_pmtu_disc = 1
-net.ipv4.ip_local_port_range = 2048 32767
-EOF
-
+echo "net.ipv4.ip_no_pmtu_disc=1" >> /etc/sysctl.conf
+echo "net.ipv4.ip_local_port_range = 2048 32767" >> /etc/sysctl.conf
 sysctl -p
 
 echo "Enabling efs/xfs kernel modules..."

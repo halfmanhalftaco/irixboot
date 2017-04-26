@@ -20,7 +20,7 @@ function formatdisk {
 		sleep 5
 	fi
 	
-	mkfs.xfs /dev/sdb1
+	mkfs.xfs -f /dev/sdb1
 	mkdir -p /irix 
 	sed -i '/\/irix/d' /etc/fstab
 	echo `blkid /dev/sdb1 | awk '{print$2}' | sed -e 's/"//g'` /irix xfs noatime,nobarrier 0 0 >> /etc/fstab
