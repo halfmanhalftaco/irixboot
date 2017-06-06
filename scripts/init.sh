@@ -18,7 +18,7 @@ invoke-rc.d rsyslog restart
 cp /etc/hosts /etc/hosts.irixboot
 
 echo "Installing packages..."
-apt-get -qq -y install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump
+apt-get update && apt-get -qq -y install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump
 
 ### disable upstream nameserver (now that we don't need it anymore)
 sed -i 's/^nameserver/#nameserver/' /etc/resolv.conf
