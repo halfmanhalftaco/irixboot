@@ -21,15 +21,17 @@ The irixboot VM provides the following services:
 
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 * [Vagrant](https://www.vagrantup.com/downloads.html)
-* IRIX Install discs
+* IRIX Install disc images
 
 I am not sure what range of IRIX versions this will work with, or what SGI machines are compatible. I have only tested the following machines and IRIX versions:
 
 * SGI Indy R4600
+* SGI Indigo2 R4400
+* IRIX 5.3
+* IRIX 6.2
 * IRIX 6.5.22
 
-Additionally, I've only tested the Vagrant configuration on Windows 10 with VirtualBox. Some changes changes will definitely be needed to support other hypervisors, but should work with VirtualBox on other systems as long as the 'bridgenic' parameter is updated correctly.
-
+Additionally, I've only tested the Vagrant configuration on Windows 10 with VirtualBox. Some changes changes will definitely be needed to support other hypervisors, but should work with VirtualBox on other systems as long as the 'bridgenic' parameter is updated correctly. You can list your system's interfaces as seen by Virtualbox with `VBoxManage list bridgedifs` - the `Name` parameter is the one it expects.
 
 
 ## Usage
