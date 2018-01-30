@@ -23,15 +23,28 @@ The irixboot VM provides the following services:
 * [Vagrant](https://www.vagrantup.com/downloads.html)
 * IRIX Install disc images
 
-I am not sure what range of IRIX versions this will work with, or what SGI machines are compatible. I have only tested the following machines and IRIX versions:
+I am not sure what range of IRIX versions this will work with, or what SGI machines are compatible. Either in personal testing or via user reports the following (at minimum) should be compatible:
 
-* SGI Indy R4600
-* SGI Indigo2 R4400
-* IRIX 5.3
-* IRIX 6.2
-* IRIX 6.5.22
+* Hardware
+	* SGI Indigo
+	* SGI Indy
+	* SGI Indigo2
+	* SGI Octane
 
-Additionally, I've only tested the Vagrant configuration on Windows 10 with VirtualBox. Some changes changes will definitely be needed to support other hypervisors, but should work with VirtualBox on other systems as long as the 'bridgenic' parameter is updated correctly. You can list your system's interfaces as seen by Virtualbox with `VBoxManage list bridgedifs` - the `Name` parameter is the one it expects.
+* Operating Systems
+	* IRIX 4D1 4.0.5
+	* IRIX 5.3
+	* IRIX 6.2
+	* IRIX 6.5.22
+	* IRIX 6.5.30
+
+I suspect that most other hardware and OS versions released in those timeframes will also work (e.g. O2, server variants, etc.) SGI obviously kept the netboot/install process pretty consistent so I'd expect it to work on probably any MIPS-based SGI system. 
+
+(feel free to send me a Personal IRIS or something to test it on!)
+
+Additionally, I've only thoroughly tested the Vagrant configuration on Windows 10 with VirtualBox, but it does work on Mac OS X and Linux as well as long as the network interface settings are changed appropriately. 
+
+Some changes changes will definitely be needed to support other hypervisors, but should work with VirtualBox on other systems as long as the 'bridgenic' parameter is updated correctly. You can list your system's interfaces as seen by Virtualbox with `VBoxManage list bridgedifs` - the `Name` parameter is the one it expects.
 
 
 ## Usage
@@ -66,7 +79,7 @@ bridgenic = 'Intel(R) Ethernet Connection (2) I219-V - VLAN : LAN'
 ```
 This is the network configuration for the server VM. the `bridgenic` parameter is the interface name for the NIC (on your host machine - not in the VM) that is connected to the network your target is on.
 
-NOTE: This VM starts a BOOTP server that will listen to broadcast traffic on your network segment. It is configured to ignore anything but the target system but if you have another DHCP/BOOTP server on the LAN segment it may interfere. You may want to temporarily disable DHCP/BOOTP if you are running that service on your LAN segment.
+NOTE: This VM starts a BOOTP server that will listen to broadcast traffic on your network segment. It is configured to ignore anything but the target system but if you have another DHCP/BOOTP server on the LAN segment the queries from the SGI hardware may get answered by your network's existing DHCP server which will cause problems. You may want to temporarily disable DHCP/BOOTP if you are running it on your LAN, configure it to not reply to queries from the SGI system, or put SGI hardware on a separate LAN segment.
 
 ## IRIX Install Discs
 
