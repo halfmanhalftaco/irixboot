@@ -2,7 +2,7 @@
 
 # irixboot
 # init.sh - install packages and adjust settings
-# (c) 2017 Andrew Liles
+# (c) 2018 Andrew Liles
 # https://github.com/halfmanhalftaco/irixboot
 # LICENCE: MIT
 
@@ -19,6 +19,9 @@ cp /etc/hosts /etc/hosts.irixboot
 
 echo "Installing packages..."
 apt-get update && apt-get -qq -y install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump
+
+# work around dnsmasq package bug with newer dns-zone-data package
+mv /usr/share/dns/root.ds /usr/share/dns/root.ds.disabled
 
 ### disable upstream nameserver (now that we don't need it anymore)
 sed -i 's/^nameserver/#nameserver/' /etc/resolv.conf

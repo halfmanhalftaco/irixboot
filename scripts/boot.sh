@@ -2,7 +2,7 @@
 
 # irixboot
 # boot.sh - start services on each boot
-# (c) 2017 Andrew Liles
+# (c) 2018 Andrew Liles
 # https://github.com/halfmanhalftaco/irixboot
 # LICENCE: MIT
 
@@ -55,7 +55,7 @@ echo "Ready to network boot '$CLIENT_NAME'"
 cd /irix
 
 echo "*** Partitioners found:"
-find . -name "fx.*" -type f | sed 's#./#irixboot:#'
+find . -name "fx.*" -type f | sed 's#./#bootp():/#'
 
 echo "*** Paths for Inst:"
 find . -name dist -type d | sed 's#./#irixboot:#'

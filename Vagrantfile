@@ -1,6 +1,6 @@
 # irixboot
 # vagrant configuration
-# (c) 2017 Andrew Liles
+# (c) 2018 Andrew Liles
 # https://github.com/halfmanhalftaco/irixboot
 # LICENSE: MIT
 
@@ -8,7 +8,7 @@
 # Change these settings to match your environment
 #####
 
-irixversion = '6.5.22'
+irixversion = '6.5'
 
 clientname = 'indy'
 clientdomain = 'sgi.halfmanhalftaco.com'
@@ -17,7 +17,7 @@ clientether = '08:00:69:CA:FE:42'
 netmask = '255.255.255.0'
 
 hostip = '192.168.42.5'
-bridgenic = 'Intel(R) Ethernet Connection (2) I219-V - VLAN : LAN'
+bridgenic = 'eth0'
 
 ##### 
 # end of settings
@@ -29,7 +29,7 @@ installdisk = './installdisk.vdi'
 Vagrant.configure("2") do |config|
 
   config.vm.box = "debian/contrib-jessie64"
-  config.vm.box_version = "8.7.0"
+  config.vm.box_version = "8.11.0"
   config.vm.network "public_network", ip: hostip, bridge: bridgenic
   config.vm.post_up_message = [ "irixboot running at ", hostip ]
   

@@ -2,7 +2,7 @@
 
 # irixboot
 # dist.sh - populate local disk with IRIX install images
-# (c) 2017 Andrew Liles
+# (c) 2018 Andrew Liles
 # https://github.com/halfmanhalftaco/irixboot
 # LICENCE: MIT
 
