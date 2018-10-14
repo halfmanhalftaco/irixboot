@@ -51,7 +51,7 @@ invoke-rc.d dnsmasq stop > /dev/null 2>&1
 update-rc.d dnsmasq disable > /dev/null 2>&1
 
 echo "Configuring tftpd-hpa..."
-mkdir /irix
+mkdir -p /irix
 sed -i 's/^TFTP_DIRECTORY.*$/TFTP_DIRECTORY="\/irix"/' /etc/default/tftpd-hpa
 sed -i 's/^TFTP_OPTIONS.*$/TFTP_OPTIONS=\"--secure -vvvv\"/' /etc/default/tftpd-hpa
 
