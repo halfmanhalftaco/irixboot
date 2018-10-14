@@ -54,9 +54,9 @@ echo "Ready to network boot '$CLIENT_NAME'"
 ## Display some useful info about the IRIX files
 cd /irix
 
-echo "*** Partitioners found:"
+echo "__________________  Partitioners found __________________"
 find . -name "fx.*" -type f | sed 's#./#bootp():/#'
 
-echo "*** Paths for Inst:"
+echo "__________________ Paths for Inst __________________"
 find . -name dist -type d | sed 's#./#irixboot:#'
 

@@ -30,6 +30,29 @@ extras="http://ftp.irisware.net/pub/irix-os/extras/perfcopilot.tar.gz
 http://ftp.irisware.net/pub/irix-os/extras/sgipostscriptfonts.tar.gz"
 
 
+# initialization
+initialization(){
+	echo "Initializing irixboot..."
+
+	echo "Installing packages..."
+	apt-get update && apt-get -qq -y install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump
+
+	echo "Adjusting kernel IPv4 settings..."
+	echo "net.ipv4.ip_no_pmtu_disc=1" >> /etc/sysctl.conf
+	echo "net.ipv4.ip_local_port_range = 2048 32767" >> /etc/sysctl.conf
+	sysctl -p
+
+	echo "Enabling efs/xfs kernel modules..."
+	echo "efs" >> /etc/modules
+	echo "xfs" >> /etc/modules
+	modprobe -a efs xfs
+
+	echo "Creating 'guest' user..."
+	if ! id -u guest >/dev/null 2>&1; then 
+		useradd -s /bin/ksh -d /irix guest 
+	fi
+}
+
 ### Partition/Format our data disk (will hold IRIX distribution)
 formatdisk(){
 	echo "Formatting /dev/sdb..."
@@ -56,17 +79,22 @@ fetchfile(){
 
 
 copydist(){
+	mkdir -p /vagrant/irix
+
 	for _url in $foundation ; do 
-		cd /irix
+		cd /vagrant/irix
 		echo "Processing archives for version $IRIXVERS"
 
-		wget "${_url}"
 		_an=$(basename "${_url}")
-		tar xvzf "${_an}"
+		# only fetch if absent
+		if [[ ! -e "${_an}" ]] ; then
+			wget "${_url}"
+			tar xvzf "${_an}"
+		fi
 	done
 
 	for _url in $overlay ; do 
-		cd /irix
+		cd /vagrant/irix
 		echo "Processing archives for version $IRIXVERS"
 
 		wget "${_url}"
@@ -75,7 +103,7 @@ copydist(){
 	done
 
 	for _url in $devel ; do 
-		cd /irix
+		cd /vagrant/irix
 		echo "Processing archives for version $IRIXVERS"
 
 		wget "${_url}"
@@ -88,14 +116,16 @@ copydist(){
 	done
 
 	for _url in $extras ; do 
-		cd /irix
+		cd /vagrant/irix
 		echo "Processing archives for version $IRIXVERS"
 
 		wget "${_url}"
 		_an=$(basename "${_url}")
 		tar xvzf "${_an}"
 	done
-	
+
+	rsync -aq /vagrant/irix/ /irix/
+
 	echo "$IRIXVERS" > /irix/.irixboot
 	chown -R guest.guest /irix
 }
@@ -106,7 +136,7 @@ main(){
 	### and check whether it is the correct version
 	echo "Checking IRIX distribution..."
 
-	mkdir -p /irix
+	initialization
 
 	if [[ -f /irix/.irixboot ]]; then
 		OLDVERS=$(cat /irix/.irixboot)
