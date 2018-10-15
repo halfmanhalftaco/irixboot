@@ -6,6 +6,11 @@
 IRIXVERS="6.5"
 
 # FTP urls
+
+## Temporary Foundation and Overlays
+## !!!!  DISABLE THIS after foundation archive is repacked!
+combined="http://mirror.larbob.org/misc/30imgs_ext.tar.gz"
+
 ## IRIX foundation
 foundation="http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/foundation1.tar.gz
 http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/foundation2.tar.gz
@@ -15,6 +20,7 @@ overlay="http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/irix-6.5.
 http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/irix-6.5.30/disc1.tar.gz
 http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/irix-6.5.30/disc2.tar.gz
 http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/irix-6.5.30/disc3.tar.gz"
+
 ## Dev
 devel="http://ftp.irisware.net/pub/irix-os/devel/developmentlibraries.tar.gz
 http://ftp.irisware.net/pub/irix-os/devel/mipspro-74/devf_13.tar.gz
@@ -81,32 +87,46 @@ fetchfile(){
 copydist(){
 	mkdir -p /vagrant/irix
 
-	for _url in $foundation ; do 
+	if [[ -n $combined ]] ; then 
+		 
 		cd /vagrant/irix
-		echo "Processing archives for version $IRIXVERS"
+		echo "Processing combined archives"
 
-		_an=$(basename "${_url}")
+		_an=$(basename "${combined}")
 		# only fetch if absent
 		if [[ ! -e "${_an}" ]] ; then
-			wget "${_url}"
+			wget --quiet "${_url}"
 			tar xvzf "${_an}"
 		fi
-	done
+		
+	else
+		for _url in $foundation ; do 
+			cd /vagrant/irix
+			echo "Processing foundation archives"
 
-	for _url in $overlay ; do 
-		cd /vagrant/irix
-		echo "Processing archives for version $IRIXVERS"
+			_an=$(basename "${_url}")
+			# only fetch if absent
+			if [[ ! -e "${_an}" ]] ; then
+				wget --quiet "${_url}"
+				tar xvzf "${_an}"
+			fi
+		done
 
-		wget "${_url}"
-		_an=$(basename "${_url}")
-		tar xvzf "${_an}"
-	done
+		for _url in $overlay ; do 
+			cd /vagrant/irix
+			echo "Processing overlay archives"
+
+			wget --quiet "${_url}"
+			_an=$(basename "${_url}")
+			tar xvzf "${_an}"
+		done
+	fi
 
 	for _url in $devel ; do 
 		cd /vagrant/irix
-		echo "Processing archives for version $IRIXVERS"
+		echo "Processing devel archives"
 
-		wget "${_url}"
+		wget --quiet "${_url}"
 		_an=$(basename "${_url}")
 		if [[ "$_an"  == "mipspro-7.4.3m.tar" ]] ; then
 			tar xvf "${_an}"
@@ -117,9 +137,9 @@ copydist(){
 
 	for _url in $extras ; do 
 		cd /vagrant/irix
-		echo "Processing archives for version $IRIXVERS"
+		echo "Processing extras archives"
 
-		wget "${_url}"
+		wget --quiet "${_url}"
 		_an=$(basename "${_url}")
 		tar xvzf "${_an}"
 	done

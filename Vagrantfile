@@ -16,11 +16,11 @@ installmirror = "ftp.irisware.com"
 
 clientname = 'indy'
 clientdomain = 'sgi.halfmanhalftaco.com'
-clientip = '192.168.0.100'
+clientip = '172.16.0.77'
 clientether = '08:00:69:CA:FE:42'
 netmask = '255.255.255.0'
 
-hostip = '192.168.0.193'
+hostip = '172.16.0.1'
 bridgenic = 'eth0'
 
 ##### 

@@ -2,6 +2,7 @@
 *.img
 *.cdr
 ._*
-installdisk.vdi
+disk.vdi
 .vagrant
 .idea
+irix/*1
