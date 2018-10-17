@@ -63,7 +63,7 @@ Set installmethod to either "ftp" or "cd". installmirror is currently not used.
 
 ```
 installmethod = "ftp"
-installmirror = "ftp.irisware.com"
+installmirror = "ftp.irisware.net"
 ```
 
 These should be obvious - the network parameters for the target SGI machine:
