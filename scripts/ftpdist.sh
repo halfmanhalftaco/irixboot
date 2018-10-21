@@ -7,10 +7,6 @@ IRIXVERS="6.5"
 
 # FTP urls
 
-## Temporary Foundation and Overlays
-## !!!!  DISABLE THIS after foundation archive is repacked!
-combined="http://mirror.larbob.org/misc/30imgs_ext.tar.gz"
-
 ## IRIX foundation
 foundation="http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/foundation1.tar.gz
 http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/foundation2.tar.gz
@@ -59,25 +55,6 @@ initialization(){
 	fi
 }
 
-### Partition/Format our data disk (will hold IRIX distribution)
-formatdisk(){
-	echo "Formatting /dev/sdb..."
-	
-	if [[ ! -e /dev/sdb1 ]]; then
-		parted /dev/sdb mklabel msdos
-		parted /dev/sdb mkpart primary 512 100%
-		partprobe /dev/sdb
-		sleep 5
-	fi
-	
-	mkfs.xfs -f /dev/sdb1
-	mkdir -p /irix 
-	sed -i '/\/irix/d' /etc/fstab
-	echo `blkid /dev/sdb1 | awk '{print$2}' | sed -e 's/"//g'` /irix xfs noatime,nobarrier 0 0 >> /etc/fstab
-	mount /irix
-	copydist
-}
-
 fetchfile(){
 	_url="$1"
 	wget "${_url}"
@@ -87,30 +64,17 @@ fetchfile(){
 copydist(){
 	mkdir -p /vagrant/irix
 
-	if [[ -n $combined ]] ; then 
-		 
+	for _url in $foundation ; do 
 		cd /vagrant/irix
-		echo "Processing combined archives"
+		echo "Processing foundation archives"
 
-		_an=$(basename "${combined}")
+		_an=$(basename "${_url}")
 		# only fetch if absent
 		if [[ ! -e "${_an}" ]] ; then
 			wget --quiet "${_url}"
 			tar xvzf "${_an}"
 		fi
 		
-	else
-		for _url in $foundation ; do 
-			cd /vagrant/irix
-			echo "Processing foundation archives"
-
-			_an=$(basename "${_url}")
-			# only fetch if absent
-			if [[ ! -e "${_an}" ]] ; then
-				wget --quiet "${_url}"
-				tar xvzf "${_an}"
-			fi
-		done
 
 		for _url in $overlay ; do 
 			cd /vagrant/irix
@@ -144,10 +108,8 @@ copydist(){
 		tar xvzf "${_an}"
 	done
 
-	rsync -aq /vagrant/irix/ /irix/
-
-	echo "$IRIXVERS" > /irix/.irixboot
-	chown -R guest.guest /irix
+	echo "$IRIXVERS" > /vagrant/irix/.irixboot
+	chown -R guest.guest /vagrant/irix
 }
 
 
@@ -158,8 +120,8 @@ main(){
 
 	initialization
 
-	if [[ -f /irix/.irixboot ]]; then
-		OLDVERS=$(cat /irix/.irixboot)
+	if [[ -f /vagrant/irix/.irixboot ]]; then
+		OLDVERS=$(cat /vagrant/irix/.irixboot)
 		if [[ "$OLDVERS" == "$IRIXVERS" ]]; then
 			echo "Found an existing disk with $IRIXVERS"
 			exit 0

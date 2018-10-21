@@ -12,6 +12,7 @@ CLIENT_MAC="$3"
 DOMAIN="$4"
 NETMASK="$5"
 HOST_IP="$6"
+_installmethod="$7"
 
 ### Calculate network address
 ### http://stackoverflow.com/questions/15429420/given-the-ip-and-netmask-how-can-i-calculate-the-network-address-using-bash
@@ -52,7 +53,11 @@ service openbsd-inetd start
 echo "Ready to network boot '$CLIENT_NAME'"
 
 ## Display some useful info about the IRIX files
-cd /irix
+if [[ "${_installmethod}" == "ftp" ]] ; then
+	cd /vagrant/irix
+else
+	cd /irix
+fi
 
 echo "__________________  Partitioners found __________________"
 find . -name "fx.*" -type f | sed 's#./#bootp():/#'

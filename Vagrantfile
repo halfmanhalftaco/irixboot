@@ -36,16 +36,17 @@ Vagrant.configure("2") do |config|
   #config.vm.network "public_network"
   config.vm.post_up_message = [ "irixboot configuration stage" ]
   
-  config.vm.provider "virtualbox" do |v|
-	  unless File.exist?(installdisk)
-		  v.customize ['createhd', '--filename', installdisk, '--size', 50 * 1024]
-	  end
-	  v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', installdisk]
-  end
-
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
   if installmethod == "cd"
-    config.vm.provision "shell", path: "scripts/init.sh"
+    # Create XFS-formatted disk for extracted CD images
+    config.vm.provider "virtualbox" do |v|
+      unless File.exist?(installdisk)
+        v.customize ['createhd', '--filename', installdisk, '--size', 50 * 1024]
+      end
+      v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', installdisk]
+    end
+    # Run local setup scripts
+    config.vm.provision "shell", path: "scripts/init.sh",run: 'always', args: installmethod
     config.vm.provision "shell", path: "scripts/dist.sh", run: 'always', args: irixversion
   elsif installmethod == "ftp"
     config.vm.provision "shell", path: "scripts/ftpdist.sh", run: 'always', args: irixversion
@@ -60,6 +61,6 @@ Vagrant.configure("2") do |config|
   config.vm.post_up_message = [ "irixboot running at ", hostip ]
 
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-  config.vm.provision "shell", path: "scripts/init.sh"
-  config.vm.provision "shell", path: "scripts/boot.sh", run: 'always', args: [clientname, clientip, clientether, clientdomain, netmask, hostip]
+  config.vm.provision "shell", path: "scripts/init.sh", run: 'always', args: installmethod
+  config.vm.provision "shell", path: "scripts/boot.sh", run: 'always', args: [clientname, clientip, clientether, clientdomain, netmask, hostip, installmethod]
 end
