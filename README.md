@@ -21,7 +21,7 @@ The irixboot VM provides the following services:
 
 * [VirtualBox](https://www.virtualbox.org/wiki/Downloads)
 * [Vagrant](https://www.vagrantup.com/downloads.html)
-* IRIX Install disc images
+* IRIX Install disc images (now optional)
 
 I am not sure what range of IRIX versions this will work with or what SGI machines are compatible. Personal testing and user reports show the following (at minimum) should be compatible:
 
@@ -44,9 +44,11 @@ I suspect that most other hardware and OS versions released in those timeframes 
 
 Some changes will definitely be needed to support other hypervisors, but irixboot should work with VirtualBox on other systems as long as the `bridgenic` parameter is updated correctly. 
 
-## Usage
+## Setup
+By default, this vagrant VM will fetch proper 6.5.30 installation packages from ftp.irisware.net.
 
-All that is needed to configure a boot environment is to populate the `irix/` directory with CD images (described below) and edit the `Vagrantfile` with your environment/client settings, then `vagrant up`.
+If you wish to use CD images, populate the `irix/` directory with the CD images (described below) and edit the `Vagrantfile` with your environment/client settings, then `vagrant up`.
+
 
 ## Settings
 
@@ -56,6 +58,12 @@ Set this to the version of IRIX you are installing. You must create a subdirecto
 
 ```
 irixversion = '6.5'
+```
+Set installmethod to either "ftp" or "cd". installmirror is currently not used.
+
+```
+installmethod = "ftp"
+installmirror = "ftp.irisware.net"
 ```
 
 These should be obvious - the network parameters for the target SGI machine:
@@ -81,6 +89,11 @@ bridgenic = 'eth0'
 ```
 
 NOTE: This VM starts a BOOTP server that will listen to broadcast traffic on your network. It is configured to ignore anything but the target system but if you have another DHCP/BOOTP server on the LAN segment the queries from the SGI hardware may get answered by your network's existing DHCP server which will cause problems. You may want to temporarily disable DHCP/BOOTP if you are running it on your LAN, configure it to not reply to queries from the SGI system, or put SGI hardware on a separate LAN (my recommendation).
+
+## IRIX media from FTP
+This VM can now sync installation media from the FTP site ftp.irisware.net. As this site contains more, and more recently updated, packages, it is the default. 
+
+Vagrant will automatically create a vagrant/irix directory on your host machine that is shared between it and the VM. It will then fetch the installation media archives only if they are missing from that directory. 
 
 ## IRIX Install Discs
 
@@ -119,7 +132,8 @@ where `/overlay30/stand/fx.ARCS` is a path relative to your selected IRIX versio
  Use `fx.ARCS` for R4xxx machines and `fx.64` for R5000+ machines (and others for older machines, I assume). Once `irixboot` finishes setup it lists any detected partitioners to help you find the correct path.
 
 ### inst (IRIX installer)
-	
+NOTE: After `irixboot` initializes, it displays a list of all `dist` subdirectories for your convenience. Use this list to preserve your sanity while running inst.
+
 The installer can be reached through the monitor GUI as follows:
 
 * At the maintenance boot screen, select "Install Software"
@@ -128,8 +142,6 @@ The installer can be reached through the monitor GUI as follows:
 * For the installation path, this depends on your directory structure. If you use the structure example from above, you would use the path `overlay30/dist`. Notice the lack of leading `/`.
 * This should load the miniroot over the network and boot into the installer.
 * To access the other distributions you extracted, use `open irixboot:<directory>/dist`.
-
-After `irixboot` initializes, it displays a list of all `dist` subdirectories for your convenience.
 
 
 ## TODO
