@@ -57,11 +57,16 @@ if [[ "${_installmethod}" == "cd" ]] ; then
     sed -i 's/^TFTP_DIRECTORY.*$/TFTP_DIRECTORY="\/irix"/' /etc/default/tftpd-hpa
     sed -i 's/^TFTP_OPTIONS.*$/TFTP_OPTIONS=\"--secure -vvvv\"/' /etc/default/tftpd-hpa
     echo "Creating 'guest' user..."
-    if ! id -u guest >/dev/null 2>&1; then useradd -s /bin/ksh -d /irix guest; fi
+    if ! id -u guest >/dev/null 2>&1; then 
+        useradd -s /bin/ksh -d /irix guest
+    fi
 else
     mkdir -p /vagrant/irix
     sed -i 's/^TFTP_DIRECTORY.*$/TFTP_DIRECTORY="\/vagrant\/irix"/' /etc/default/tftpd-hpa
     sed -i 's/^TFTP_OPTIONS.*$/TFTP_OPTIONS=\"--secure -vvvv\"/' /etc/default/tftpd-hpa
     echo "Creating 'guest' user..."
-    if ! id -u guest >/dev/null 2>&1; then useradd -s /bin/ksh -d /irix guest; fi    
+    if ! id -u guest >/dev/null 2>&1; then 
+        useradd -s /bin/ksh -d /vagrant/irix guest
+    fi    
 fi
+

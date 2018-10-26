@@ -25,7 +25,11 @@ cp /etc/hosts.irixboot /etc/hosts
 sed -i "s/\.raw/.$DOMAIN/" /etc/hosts
 echo $CLIENT_IP $CLIENT_NAME.$DOMAIN >> /etc/hosts
 echo $HOST_IP irixboot.$DOMAIN >> /etc/hosts
-su guest -c "echo $CLIENT_NAME.$DOMAIN root > ~/.rhosts"
+if [[ -d /irix ]] ; then 
+	echo $CLIENT_NAME.$DOMAIN root > /irix/.rhosts
+else
+	echo $CLIENT_NAME.$DOMAIN root > /vagrant/irix/.rhosts
+fi
 echo "$CLIENT_NAME" > /etc/hosts.equiv
 echo "irixboot" >> /etc/hosts.equiv
 
@@ -64,4 +68,6 @@ find . -name "fx.*" -type f | sed 's#./#bootp():/#'
 
 echo "__________________ Paths for Inst __________________"
 find . -name dist -type d | sed 's#./#irixboot:#'
+echo "__________________ Paths for Nekodeps __________________"
+echo "irixboot:nekodeps"
 

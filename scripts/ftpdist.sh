@@ -31,6 +31,8 @@ http://ftp.irisware.net/pub/irix-os/devel/mipspro-74/prodev.tar.gz"
 extras="http://ftp.irisware.net/pub/irix-os/extras/perfcopilot.tar.gz
 http://ftp.irisware.net/pub/irix-os/extras/sgipostscriptfonts.tar.gz"
 
+## Nekodeps
+nekodeps="nekodeps_custom.0.0.1.tardist"
 
 # initialization
 initialization(){
@@ -71,26 +73,26 @@ copydist(){
 		_an=$(basename "${_url}")
 		# only fetch if absent
 		if [[ ! -e "${_an}" ]] ; then
-			wget --quiet "${_url}"
+			wget --quiet -nc "${_url}"
 			tar xvzf "${_an}"
 		fi
-		
+	done	
 
-		for _url in $overlay ; do 
-			cd /vagrant/irix
-			echo "Processing overlay archives"
+	for _url in $overlay ; do 
+		cd /vagrant/irix
+		echo "Processing overlay archives"
 
-			wget --quiet "${_url}"
-			_an=$(basename "${_url}")
-			tar xvzf "${_an}"
-		done
-	fi
+		wget --quiet -nc "${_url}"
+		_an=$(basename "${_url}")
+		tar xvzf "${_an}"
+	done
+	
 
 	for _url in $devel ; do 
 		cd /vagrant/irix
 		echo "Processing devel archives"
 
-		wget --quiet "${_url}"
+		wget --quiet -nc "${_url}"
 		_an=$(basename "${_url}")
 		if [[ "$_an"  == "mipspro-7.4.3m.tar" ]] ; then
 			tar xvf "${_an}"
@@ -103,10 +105,15 @@ copydist(){
 		cd /vagrant/irix
 		echo "Processing extras archives"
 
-		wget --quiet "${_url}"
+		wget --quiet -nc "${_url}"
 		_an=$(basename "${_url}")
 		tar xvzf "${_an}"
 	done
+
+	cd /vagrant/irix
+	echo "Processing nekodeps"
+	mkdir nekodeps
+	tar xvf "${nekodeps}" -C nekodeps
 
 	echo "$IRIXVERS" > /vagrant/irix/.irixboot
 	chown -R guest.guest /vagrant/irix
@@ -131,8 +138,6 @@ main(){
 	else
 		echo "No IRIX files found on local disk, copying from disk images..."
 	fi
-
-	formatdisk
 }
 
 main
