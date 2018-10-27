@@ -1,7 +1,7 @@
 # irixboot
 # vagrant configuration
-# (c) 2018 Andrew Liles
-# https://github.com/halfmanhalftaco/irixboot
+# (c) 2018 Eric Dodd
+# https://github.com/unxmaal/irixboot
 # LICENSE: MIT
 
 #####
@@ -15,13 +15,19 @@ installmethod = "ftp"
 installmirror = "ftp.irisware.com"
 
 clientname = 'indy'
-clientdomain = 'sgi.halfmanhalftaco.com'
-clientip = '172.16.0.77'
-clientether = '08:00:69:CA:FE:42'
+clientdomain = 'sgi.unxmaal.com'
+clientip = '192.168.0.77'
+clientether = '08:00:69:0e:af:65'
 netmask = '255.255.255.0'
 
-hostip = '172.16.0.1'
-bridgenic = 'eth0'
+# this should be the secondary physical interface on your VM host to 
+#   which you have a cable connected from your SGI machine
+bridgenic = 'en0'
+# This is the VM's IP on the point to point connection between it 
+#   and the SGI
+hostip = '192.168.0.1'
+
+
 
 ##### 
 # end of settings
@@ -45,9 +51,9 @@ Vagrant.configure("2") do |config|
       end
       v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', installdisk]
     end
+    config.vm.provision "file", source: "files/nekodeps_custom.0.0.1.tardist", destination: ""
     # Run local setup scripts
     config.vm.provision "shell", path: "scripts/init.sh",run: 'always', args: installmethod
-    config.vm.provision "shell", path: "scripts/dist.sh", run: 'always', args: irixversion
   elsif installmethod == "ftp"
     config.vm.provision "shell", path: "scripts/ftpdist.sh", run: 'always', args: irixversion
   end
