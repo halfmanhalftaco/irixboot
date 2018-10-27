@@ -25,11 +25,7 @@ cp /etc/hosts.irixboot /etc/hosts
 sed -i "s/\.raw/.$DOMAIN/" /etc/hosts
 echo $CLIENT_IP $CLIENT_NAME.$DOMAIN >> /etc/hosts
 echo $HOST_IP irixboot.$DOMAIN >> /etc/hosts
-if [[ -d /irix ]] ; then 
-	echo $CLIENT_NAME.$DOMAIN root > /irix/.rhosts
-else
-	echo $CLIENT_NAME.$DOMAIN root > /vagrant/irix/.rhosts
-fi
+echo $CLIENT_NAME.$DOMAIN root > /irix/.rhosts
 echo "$CLIENT_NAME" > /etc/hosts.equiv
 echo "irixboot" >> /etc/hosts.equiv
 
@@ -57,11 +53,7 @@ service openbsd-inetd start
 echo "Ready to network boot '$CLIENT_NAME'"
 
 ## Display some useful info about the IRIX files
-if [[ "${_installmethod}" == "ftp" ]] ; then
-	cd /vagrant/irix
-else
-	cd /irix
-fi
+cd /vagrant/irix
 
 echo "__________________  Partitioners found __________________"
 find . -name "fx.*" -type f | sed 's#./#bootp():/#'

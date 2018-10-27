@@ -1,7 +1,5 @@
 # irixboot
 # vagrant configuration
-# (c) 2018 Andrew Liles
-# https://github.com/halfmanhalftaco/irixboot
 # LICENSE: MIT
 
 #####
@@ -14,14 +12,14 @@ irixversion = '6.5'
 installmethod = "ftp"
 installmirror = "ftp.irisware.com"
 
-clientname = 'indy'
-clientdomain = 'sgi.halfmanhalftaco.com'
-clientip = '172.16.0.77'
-clientether = '08:00:69:CA:FE:42'
+clientname = 'sgi'
+clientdomain = 'devonshire.local'
+clientip = '192.168.0.77'
+clientether = '08:00:69:0e:af:65'
 netmask = '255.255.255.0'
 
-hostip = '172.16.0.1'
-bridgenic = 'eth0'
+hostip = '192.168.0.1'
+bridgenic = 'en0'
 
 ##### 
 # end of settings
@@ -37,14 +35,14 @@ Vagrant.configure("2") do |config|
   config.vm.post_up_message = [ "irixboot configuration stage" ]
   
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
-  if installmethod == "cd"
-    # Create XFS-formatted disk for extracted CD images
-    config.vm.provider "virtualbox" do |v|
-      unless File.exist?(installdisk)
-        v.customize ['createhd', '--filename', installdisk, '--size', 50 * 1024]
-      end
-      v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', installdisk]
+  # Create XFS-formatted disk for extracted CD images
+  config.vm.provider "virtualbox" do |v|
+    unless File.exist?(installdisk)
+      v.customize ['createhd', '--filename', installdisk, '--size', 50 * 1024]
     end
+    v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', installdisk]
+  end
+  if installmethod == "cd"
     # Run local setup scripts
     config.vm.provision "shell", path: "scripts/init.sh",run: 'always', args: installmethod
     config.vm.provision "shell", path: "scripts/dist.sh", run: 'always', args: irixversion

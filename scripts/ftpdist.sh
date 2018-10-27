@@ -34,6 +34,26 @@ http://ftp.irisware.net/pub/irix-os/extras/sgipostscriptfonts.tar.gz"
 ## Nekodeps
 nekodeps="nekodeps_custom.0.0.1.tardist"
 
+### Partition/Format our data disk (will hold IRIX distribution)
+function formatdisk {
+	echo "Formatting /dev/sdb..."
+	
+	if [ ! -e /dev/sdb1 ]
+	then
+		parted /dev/sdb mklabel msdos
+		parted /dev/sdb mkpart primary 512 100%
+		partprobe /dev/sdb
+		sleep 5
+	fi
+	
+	mkfs.xfs -f /dev/sdb1
+	mkdir -p /irix 
+	sed -i '/\/irix/d' /etc/fstab
+	echo `blkid /dev/sdb1 | awk '{print$2}' | sed -e 's/"//g'` /irix xfs noatime,nobarrier 0 0 >> /etc/fstab
+	mount /irix
+}
+
+
 # initialization
 initialization(){
 	echo "Initializing irixboot..."
@@ -82,9 +102,13 @@ copydist(){
 		cd /vagrant/irix
 		echo "Processing overlay archives"
 
-		wget --quiet -nc "${_url}"
+
 		_an=$(basename "${_url}")
-		tar xvzf "${_an}"
+		# only fetch if absent
+		if [[ ! -e "${_an}" ]] ; then
+			wget --quiet -nc "${_url}"
+			tar xvzf "${_an}"
+		fi
 	done
 	
 
@@ -92,12 +116,14 @@ copydist(){
 		cd /vagrant/irix
 		echo "Processing devel archives"
 
-		wget --quiet -nc "${_url}"
 		_an=$(basename "${_url}")
-		if [[ "$_an"  == "mipspro-7.4.3m.tar" ]] ; then
-			tar xvf "${_an}"
-		else
-			tar xvzf "${_an}"
+		if [[ ! -e "${_an}" ]] ; then
+			wget --quiet -nc "${_url}"
+			if [[ "$_an"  == "mipspro-7.4.3m.tar" ]] ; then
+				tar xvf "${_an}"
+			else
+				tar xvzf "${_an}"
+			fi
 		fi
 	done
 
@@ -105,20 +131,27 @@ copydist(){
 		cd /vagrant/irix
 		echo "Processing extras archives"
 
-		wget --quiet -nc "${_url}"
 		_an=$(basename "${_url}")
-		tar xvzf "${_an}"
+		if [[ ! -e "${_an}" ]] ; then
+			wget --quiet -nc "${_url}"
+			tar xvzf "${_an}"
+		fi
 	done
 
 	cd /vagrant/irix
 	echo "Processing nekodeps"
-	mkdir nekodeps
-	tar xvf "${nekodeps}" -C nekodeps
-
-	echo "$IRIXVERS" > /vagrant/irix/.irixboot
-	chown -R guest.guest /vagrant/irix
+	if [[ ! -d nekodeps ]] ; then
+		mkdir nekodeps
+		tar xvf "${nekodeps}" -C nekodeps
+	fi
 }
 
+sync_pkgs(){
+	mkdir -p /irix
+	rsync -av /vagrant/irix/* /irix
+	echo "$IRIXVERS" > /irix/.irixboot
+	chown -R guest.guest /irix
+}
 
 main(){
 	### Check if disk is already mounted from previous provisioning
@@ -126,9 +159,13 @@ main(){
 	echo "Checking IRIX distribution..."
 
 	initialization
+	formatdisk
+	copydist
+	sync_pkgs
 
-	if [[ -f /vagrant/irix/.irixboot ]]; then
-		OLDVERS=$(cat /vagrant/irix/.irixboot)
+
+	if [[ -f /irix/.irixboot ]]; then
+		OLDVERS=$(cat /irix/.irixboot)
 		if [[ "$OLDVERS" == "$IRIXVERS" ]]; then
 			echo "Found an existing disk with $IRIXVERS"
 			exit 0
