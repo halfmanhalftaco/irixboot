@@ -1,0 +1,17 @@
+#!/usr/bin/expect -f
+
+spawn screen /dev/ttyUSB0 9600
+send -- "\r"
+
+expect "*Option?*" { send -- "5\r" }
+expect "*> " { send -- "netaddr=192.168.0.77\r" }
+expect "*> " { send -- "bootp():/30-Overlays1/stand/fx.ARCS\r" }
+expect "*(no) " { send -- "\r" }
+expect "*device-name*" { send -- "dksc\r" }
+expect "*ctlr#*" { send -- "0\r" }
+expect "*drive#* " { send -- "1\r" }
+expect "fx> " { send -- "r\r" }
+expect "fx/repartition> " { send -- "ro\r" }
+expect "*type of data partition*" { send -- "xfs\r" }
+expect "*Continue?*" { send --  "yes\r" }
+expect "fx/repartition> " { send --  "/exit\r" }
