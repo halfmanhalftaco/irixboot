@@ -3,15 +3,70 @@
 spawn screen /dev/ttyUSB0 9600
 send -- "\r"
 
-expect "*Option?*" { send -- "5\r" }
-expect "*> " { send -- "netaddr=192.168.0.77\r" }
-expect "*> " { send -- "bootp():/30-Overlays1/stand/fx.ARCS\r" }
-expect "*(no) " { send -- "\r" }
-expect "*device-name*" { send -- "dksc\r" }
-expect "*ctlr#*" { send -- "0\r" }
-expect "*drive#* " { send -- "1\r" }
-expect "fx> " { send -- "r\r" }
-expect "fx/repartition> " { send -- "ro\r" }
-expect "*type of data partition*" { send -- "xfs\r" }
-expect "*Continue?*" { send --  "yes\r" }
-expect "fx/repartition> " { send --  "/exit\r" }
+expect "*Option?*" { send -- "2\r" }
+expect "*to start: " { send -- "2\r" }
+expect "*remote host: " { send -- "irixboot" }
+expect "Enter the remote directory: " { send -- "/disc1/dist\r" }
+expect "*<enter> to start:" { send -- "\r" }
+expect "Inst> " { send -- "1\r" }
+expect "*Install software from:*" { send -- "irixboot:Foundation1/dist\r" }
+expect "What is the network address*" { send -- "192.168.0.1\r" }
+expect "Inst> " { send -- "2\r" }
+expect "Install software from:*"{ send -- "irixboot:Foundation2/dist\r" }
+expect "Inst> " { send -- "2\r" }
+expect "Install software from:*"{ send -- "irixboot:onc3nfs/dist\r" }
+
+
+CHANGE overlays to irixboot:disc1 - 3
+
+expect "Inst> " { send -- "2\r" }
+expect "Install software from:*"{ send -- "irixboot:30-Overlays1/dist\r" }
+expect "*more*" { send -- "n\r" }
+expect "*more*" { send -- "\r" }
+
+expect "Inst> " { send -- "2\r" }
+expect "Install software from:*"{ send -- "irixboot:30-Overlays2/dist\r" }
+
+expect "Inst> " { send -- "2\r" }
+expect "Install software from:*"{ send -- "irixboot:30-Overlays3/dist\r" }
+
+expect "Inst> " { send -- "2\r" }
+expect "Install software from:*"{ send -- "irixboot:30-Applications/dist\r" }
+expect "*more*" { send -- "n\r" }
+
+expect "Inst> " { send -- "2\r" }
+expect "Install software from:*"{ send -- "irixboot:30-Complementary_Applications/dist\r" }
+expect "*more*" { send -- "n\r" }
+
+#-------------- Dev
+#   default: irixboot:mipspro_c/CDROM/dist
+#   default: irixboot:mipspro_c/dist
+#   default: irixboot:prodev/dist
+#   default: irixboot:developmentlibraries/dist
+#   default: irixboot:MipsPro-7.4.3m/dist
+#   default: irixboot:perfcopilot/dist
+#   default: irixboot:mipsproap/dist
+#   default: irixboot:mipspro_cee/dist
+#   default: irixboot:disc2/dist
+#   default: irixboot:disc3/dist
+#   default: irixboot:devf_13/dist
+#   default: irixboot:apps/dist
+#   default: irixboot:mipspro_cpp/dist
+
+expect "Install software from:*"{ send -- "irixboot:nekodeps\r" }
+
+expect "Install software from:*"{ send -- "done\r" }
+
+#------------ Conflicts
+expect "Inst> " { send -- "keep *\r" }
+expect "Inst> " { send -- "install default\r" }
+expect "Inst> " { send -- "conflicts 1a\r" }
+
+#----------- go
+expect "Inst> " { send -- "go\r" }
+
+expect "*Installations and removals were successful.*" { send -- "quit\r" }
+expect "*Restart?*" { send -- "y\r" }
+
+
+
