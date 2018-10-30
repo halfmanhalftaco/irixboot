@@ -50,8 +50,7 @@ expect "*more*" { send -- "n\r" }
 #   default: irixboot:mipspro_cpp/dist
 
 expect "Install software from:*" { send -- "irixboot:nekodeps\r" }
-
-expect "Install software from:*" { send -- "done\r" }
+expect "*[irixboot:nekodeps]" { send -- "done\r" }
 
 #------------ Conflicts
 expect "Inst> " { send -- "keep *\r" }
