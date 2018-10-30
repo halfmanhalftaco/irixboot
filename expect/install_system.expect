@@ -15,28 +15,24 @@ expect "Inst> " { send -- "2\r" }
 expect "Install software from:*"{ send -- "irixboot:Foundation2/dist\r" }
 expect "Inst> " { send -- "2\r" }
 expect "Install software from:*"{ send -- "irixboot:onc3nfs/dist\r" }
-
-
-CHANGE overlays to irixboot:disc1 - 3
-
 expect "Inst> " { send -- "2\r" }
-expect "Install software from:*"{ send -- "irixboot:30-Overlays1/dist\r" }
+expect "Install software from:*"{ send -- "irixboot:disc1/dist\r" }
 expect "*more*" { send -- "n\r" }
 expect "*more*" { send -- "\r" }
 
 expect "Inst> " { send -- "2\r" }
-expect "Install software from:*"{ send -- "irixboot:30-Overlays2/dist\r" }
+expect "Install software from:*"{ send -- "irixboot:disc2/dist\r" }
 
 expect "Inst> " { send -- "2\r" }
-expect "Install software from:*"{ send -- "irixboot:30-Overlays3/dist\r" }
+expect "Install software from:*"{ send -- "irixboot:disc3/dist\r" }
 
 expect "Inst> " { send -- "2\r" }
-expect "Install software from:*"{ send -- "irixboot:30-Applications/dist\r" }
+expect "Install software from:*"{ send -- "irixboot:apps/dist\r" }
 expect "*more*" { send -- "n\r" }
 
-expect "Inst> " { send -- "2\r" }
-expect "Install software from:*"{ send -- "irixboot:30-Complementary_Applications/dist\r" }
-expect "*more*" { send -- "n\r" }
+#expect "Inst> " { send -- "2\r" }
+#expect "Install software from:*"{ send -- "irixboot:30-Complementary_Applications/dist\r" }
+#expect "*more*" { send -- "n\r" }
 
 #-------------- Dev
 #   default: irixboot:mipspro_c/CDROM/dist
