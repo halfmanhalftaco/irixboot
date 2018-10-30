@@ -5,7 +5,7 @@ send -- "\r"
 
 expect "*Option?*" { send -- "2\r" }
 expect "*to start: " { send -- "2\r" }
-expect "*remote host: " { send -- "irixboot" }
+expect "*remote host: " { send -- "irixboot\r" }
 expect "Enter the remote directory: " { send -- "/disc1/dist\r" }
 expect "*<enter> to start:" { send -- "\r" }
 expect "Inst> " { send -- "1\r" }
