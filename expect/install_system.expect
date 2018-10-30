@@ -12,26 +12,26 @@ expect "Inst> " { send -- "1\r" }
 expect "*Install software from:*" { send -- "irixboot:Foundation1/dist\r" }
 expect "What is the network address*" { send -- "192.168.0.1\r" }
 expect "Inst> " { send -- "2\r" }
-expect "Install software from:*"{ send -- "irixboot:Foundation2/dist\r" }
+expect "Install software from:*" { send -- "irixboot:Foundation2/dist\r" }
 expect "Inst> " { send -- "2\r" }
-expect "Install software from:*"{ send -- "irixboot:onc3nfs/dist\r" }
+expect "Install software from:*" { send -- "irixboot:onc3nfs/dist\r" }
 expect "Inst> " { send -- "2\r" }
-expect "Install software from:*"{ send -- "irixboot:disc1/dist\r" }
+expect "Install software from:*" { send -- "irixboot:disc1/dist\r" }
 expect "*more*" { send -- "n\r" }
 expect "*more*" { send -- "\r" }
 
 expect "Inst> " { send -- "2\r" }
-expect "Install software from:*"{ send -- "irixboot:disc2/dist\r" }
+expect "Install software from:*" { send -- "irixboot:disc2/dist\r" }
 
 expect "Inst> " { send -- "2\r" }
-expect "Install software from:*"{ send -- "irixboot:disc3/dist\r" }
+expect "Install software from:*" { send -- "irixboot:disc3/dist\r" }
 
 expect "Inst> " { send -- "2\r" }
-expect "Install software from:*"{ send -- "irixboot:apps/dist\r" }
+expect "Install software from:*" { send -- "irixboot:apps/dist\r" }
 expect "*more*" { send -- "n\r" }
 
 #expect "Inst> " { send -- "2\r" }
-#expect "Install software from:*"{ send -- "irixboot:30-Complementary_Applications/dist\r" }
+#expect "Install software from:*" { send -- "irixboot:30-Complementary_Applications/dist\r" }
 #expect "*more*" { send -- "n\r" }
 
 #-------------- Dev
@@ -49,9 +49,9 @@ expect "*more*" { send -- "n\r" }
 #   default: irixboot:apps/dist
 #   default: irixboot:mipspro_cpp/dist
 
-expect "Install software from:*"{ send -- "irixboot:nekodeps\r" }
+expect "Install software from:*" { send -- "irixboot:nekodeps\r" }
 
-expect "Install software from:*"{ send -- "done\r" }
+expect "Install software from:*" { send -- "done\r" }
 
 #------------ Conflicts
 expect "Inst> " { send -- "keep *\r" }
