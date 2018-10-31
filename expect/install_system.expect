@@ -12,8 +12,16 @@ expect "Inst> " { send -- "1\r" }
 expect "*Install software from:*" { send -- "irixboot:Foundation1/dist\r" }
 expect {
     "What is the network address*" { send -- "192.168.0.1\r" }
-    "Inst> " { send -- "2\r" }
+    "Inst> " { send -- "13\r" }
 }
+
+# Destroy existing data here
+expect "Inst> " { send -- "13\r" }
+expect "Admin> " { send -- "11\r" }
+expect "(h)elp }:*" { send -- "y\r" }
+expect "/dev/dsk/realroot?*" { send -- "yes\r" }
+expect "Admin> " { send -- "..\r" }
+"Inst> " { send -- "2\r" }
 
 expect "Install software from:*" { send -- "irixboot:Foundation2/dist\r" }
 expect {
