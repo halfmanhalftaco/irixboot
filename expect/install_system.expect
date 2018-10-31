@@ -16,7 +16,10 @@ expect "IP class default*: " { send -- "\r" }
 
 # Destroy existing data here
 expect "Inst> " { send -- "13\r" }
-expect "Admin> " { send -- "11\r" }
+expect { 
+    "more? (h=help)" { send -- "q\r" }
+    "Admin> " { send -- "11\r" }
+}
 expect "(h)elp }:*" { send -- "y\r" }
 expect "/dev/dsk/realroot?*" { send -- "yes\r" }
 expect "Admin> " { send -- "..\r" }
