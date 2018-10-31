@@ -14,6 +14,9 @@ expect {
     "What is the network address*" { send -- "192.168.0.1\r" }
     "Inst> " { send -- "13\r" }
 }
+expect "your machine? " { send -- "octane\r" }
+expect "address of sgi? " { send -- "192.168.0.77\r" }
+expect "IP class default*: " { send -- "\r" }
 
 # Destroy existing data here
 expect "Inst> " { send -- "13\r" }
