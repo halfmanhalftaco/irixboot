@@ -15,18 +15,26 @@ expect "address of octane? " { send -- "192.168.0.77\r" }
 expect "IP class default*: " { send -- "\r" }
 
 # Destroy existing data here
-expect "Inst> " { send -- "13\r" }
-expect { 
-    "more? (h=help)" { send -- "q\r" }
-    "Admin> " { send -- "11\r" }
+expect "Inst>" { send -- "13\r" }
+expect {
+    "more*help)" { send -- "q\r" }
+    "Admin>" { send -- "11\r" }
+    exp_continue
 }
-expect "(h)elp }:*" { send -- "y\r" }
-expect "/dev/dsk/realroot?*" { send -- "yes\r" }
-expect "Admin> " { send -- "..\r" }
+
+expect {
+    "more*help)" { send -- "q\r" }
+    "Admin>" { send -- "11\r" }
+    exp_continue
+}
+
+expect "(h)elp }:" { send -- "y\r" }
+expect "/dev/dsk/realroot?" { send -- "yes\r" }
+expect "Admin>" { send -- "..\r" }
 
 # start install
-expect "Inst> " { send -- "1\r" }
-expect "*Install software from:*" { send -- "irixboot:Foundation1/dist\r" }
+expect "Inst>" { send -- "1\r" }
+expect "*Install software from:" { send -- "irixboot:Foundation1/dist\r" }
 expect {
     "What is the network address*" { send -- "192.168.0.1\r" }
     "Inst> " { send -- "2\r" }
