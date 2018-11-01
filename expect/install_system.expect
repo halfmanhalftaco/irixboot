@@ -16,16 +16,18 @@ expect "IP class default*:" { send -- "\r" }
 
 # Destroy existing data here
 expect "Inst>" { send -- "13\r" }
-expect {
-    exp_continue
-    "more*help)" { send -- "q\r" ; exp_continue }
-    "Admin>" { send -- "11\r" }
-}
+expect "more?" { send -- "\r" }
+expect "Admin>" { send -- "mkfs\r" }
 
-expect {
-    "more*help)" { send -- "q\r" ; exp_continue }
-    "Admin>" { send -- "11\r" }
-}
+#expect {
+#    "help)" { send -- "q\r" ; exp_continue }
+#    "Admin>" { send -- "mkfs\r" }
+#}
+
+#expect {
+#    "help)" { send -- "q\r" ; exp_continue }
+#    "Admin>" { send -- "mkfs\r" }
+#}
 
 expect "(h)elp }:" { send -- "y\r" }
 expect "/dev/dsk/realroot?" { send -- "yes\r" }
@@ -35,6 +37,7 @@ expect "Admin>" { send -- "..\r" }
 expect "Inst>" { send -- "1\r" }
 expect "*Install software from:" { send -- "irixboot:Foundation1/dist\r" }
 expect {
+    "more? (h=help)" { send -- "q\r"  ; exp_continue }
     "What is the network address*" { send -- "192.168.0.1\r"  ; exp_continue }
     "Inst>" { send -- "2\r" }
 }
@@ -111,7 +114,7 @@ expect "Install software from:*" { send -- "irixboot:nekodeps\r" }
 expect {
     "more? (h=help)" { send -- "q\r"  ; exp_continue }
     "(y/n)*" { send -- "n\r"  ; exp_continue }
-    "Inst> " { send -- "2\r" }
+    "Inst>" { send -- "2\r" }
 }
 expect "Install software from:*" { send -- "done\r" }
 
@@ -119,12 +122,13 @@ expect "Install software from:*" { send -- "done\r" }
 expect "Inst>" { send -- "keep *\r" }
 expect "Inst>" { send -- "install default\r" }
 expect "Inst>" { send -- "conflicts\r" }
-expect "Please enter a choice*" { send -- "1\r" }
 expect "more? (h=help)" { send -- "q\r" }
-expect "Inst>" { send -- "conflicts 1a 2a 3a 4a 5a 6a 7a 8a 9a 10a\r" }
-expect "Inst>" { send -- "conflicts 1c\r" }
-expect "Inst>" { send -- "conflicts 1b\r" }
-
+#expect "Please enter a choice*" { send -- "1\r" }
+expect "Inst>" { send -- "conflicts 1a 2a 3a 4a 5a 6a 7a 8a 9a 10a 11a 12a 13a 14a 15a 16a 17a 18a 19a 20a 21a 22a 23a 24a 25a 26a 27a 28a 29a 30a 31a 32a 33a 34a 35a 36a 37a 38a 39a 40a 41a 42a 43a 44a 45a 46a 47a 48a 49a 50a 51a 52a 53a 54a 55a
+\r" }
+expect "Inst>" { send -- "conflicts 1a 2a\r" }
+expect "Inst>" { send -- "conflicts 1a 2a 3a\r" }
+expect "Inst>" { send -- "conflicts 1a 2a\r" }
 
 #----------- go
 expect "Inst>" { send -- "go\r" }
