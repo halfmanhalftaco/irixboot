@@ -133,7 +133,7 @@ expect "Inst>" { send -- "conflicts 1a 2a\r" }
 #----------- go
 expect "Inst>" { send -- "go\r" }
 
-expect "*Installations and removals were successful.*" { send -- "quit\r" }
+expect "Inst>" { send -- "quit\r" }
 expect "*Restart?*" { send -- "y\r" }
 
 

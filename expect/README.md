@@ -1,17 +1,29 @@
-#notes
+# Overview for expect scripts
 
-run vagrant up
-if asked, pick the ethernet connection for bridged interface
+* Run 'vagrant up'
+* If asked, pick the ethernet connection for bridged interface
 
-Note the partitioner entry for fx.ARCS
+* Note the partitioner entry for fx.ARCS
+```
 bootp():/30-Overlays1/stand/fx.ARCS
+```
 
-Connect serial cable.
-Start screen on linux
+* Connect serial cable.
+* Run screen on linux
+```
+screen /dev/ttyUSB0 9600
+```
 
 # prom
+* Put the SGI into PROM 
+```
 printenv
-Note "eaddr=08:00:69:0e:af:65"
+```
+Note the MAC address: 
+
+```
+eaddr=08:00:69:0e:af:65"
+```
 
 ConsoleOut=video()
 ConsoleIn=keyboard()
@@ -19,6 +31,30 @@ console=g
 
 # Modify settings
 setenv ConsoleOut serial(0)
-setenv changed to ConsoleIn serial(0)
-setenv changed to console d
+setenv ConsoleIn serial(0)
+setenv console d
 
+# Run the expect scripts 
+format_drives.expect partitions the volume.
+
+install_system.expect formats the partitions, then installs IRIX from bootp.
+
+This erases your drive. 
+
+# Post install
+When the install is complete, the system will ask to be rebooted.
+
+After the reboot, log in from console as root / no password. 
+
+reboot
+
+Hit 'escape' several times, just after the chime, to bring up PROM.
+
+# Reset settings
+setenv ConsoleOut video()
+setenv ConsoleIn keyboard()
+setenv console g
+
+The system will reboot again, to the GUI. 
+
+Run EZSetup.

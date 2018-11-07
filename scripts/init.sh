@@ -19,7 +19,15 @@ invoke-rc.d rsyslog restart
 cp /etc/hosts /etc/hosts.irixboot
 
 echo "Installing packages..."
-apt-get update && apt-get -qq -y install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump
+echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" >> /etc/apt/sources.list
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
+apt-get update && apt-get -qq -y install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump ansible git 
+
+echo "Installing ansible plays"
+pushd /home/vagrant
+git clone https://github.com/unxmaal/irix_ansible.git
+chown -R vagrant:vagrant irix_ansible
+popd
 
 # work around dnsmasq package bug with newer dns-zone-data package
 mv /usr/share/dns/root.ds /usr/share/dns/root.ds.disabled
