@@ -5,12 +5,6 @@ irixboot is designed to quickly configure a disposable VM to boot a specific ver
 
 This sets up some configuration in the VM that is not secure or may interfere with other network services (e.g. DHCP) so please don't leave it running long-term. I recommend only attaching the network interface to an isolated network for this purpose and then `vagrant halt` or `vagrant destroy` the VM when you are done installing.
 
-## Background
-
-After acquiring an SGI Indy, which doesn't have a CD-ROM drive, I was seeking ways to boot/install IRIX over the network. 
-
-I was inspired to create this after being pointed at the [DINA VM](http://shiftleft.com/mirrors/dina.harrydebug.com/) and being frustrated that it didn't have EFS drivers to read the IRIX CD-ROMs built in. I figured a more repeatable/disposable build using Vagrant would be the best way to handle this problem.
-
 The irixboot VM provides the following services:
 
 * BOOTP server (via isc-dhcp)
@@ -95,7 +89,7 @@ This VM can now sync installation media from the FTP site ftp.irisware.net. As t
 
 Vagrant will automatically create a vagrant/irix directory on your host machine that is shared between it and the VM. It will then fetch the installation media archives only if they are missing from that directory. 
 
-## IRIX Install Discs
+## IRIX media from Install Discs
 
 Once you've imaged your SGI discs, you need to populate the `irix/` directory for irixboot to extract them. Within `irix/` should be directories with the names of the IRIX versions they contain. These version numbers must match what you configured earlier for the `irixversion` parameter in `Vagrantfile`. Within each of those directories must be subdirectories of arbitrary name, and any number of disk image files within those. Further levels of directory nesting are not currently supported. 
 
@@ -155,7 +149,9 @@ The installer can be reached through the monitor GUI as follows:
 
 MIT License
 
+Portions of this project are:
 Copyright (c) 2018 Andrew Liles
+Copyright (c) 2018 Eric Dodd
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
