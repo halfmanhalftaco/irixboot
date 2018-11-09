@@ -29,6 +29,11 @@ git clone https://github.com/unxmaal/irix_ansible.git
 chown -R vagrant:vagrant irix_ansible
 popd
 
+echo "Generating IRIX_Ansible inventory file"
+if [[ -e /tmp/inventory.ini ]] ; then
+    cp /tmp/inventory.ini /home/vagrant/irix_ansible/inventory.ini
+fi
+
 # work around dnsmasq package bug with newer dns-zone-data package
 mv /usr/share/dns/root.ds /usr/share/dns/root.ds.disabled
 

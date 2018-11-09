@@ -1,0 +1,6 @@
+---
+- name: generate irix_ansible inventory file from Vagrant parameters
+  hosts: all
+  tasks:
+  - import_role:
+     name: inventory_gen
