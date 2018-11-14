@@ -12,13 +12,20 @@ irixversion = '6.5'
 installmethod = "ftp"
 installmirror = "ftp.irisware.com"
 
+# your SGI box's hostname
 clientname = 'sgi'
+# whatever domain that you make up
 clientdomain = 'devonshire.local'
+# your sgi box's IP address that you make up
 clientip = '192.168.0.77'
+# your sgi box's physical hardware address, from printenv at PROM
 clientether = '08:00:69:0e:af:65'
+# proper netmask
 netmask = '255.255.255.0'
 
+# your host pc will get this IP
 hostip = '192.168.0.1'
+# this name can change from en0 to something else. verify it.
 bridgenic = 'en0'
 
 ##### 
@@ -35,6 +42,9 @@ Vagrant.configure("2") do |config|
   config.vm.post_up_message = [ "irixboot configuration stage" ]
   
   config.vm.synced_folder ".", "/vagrant", type: "virtualbox"
+  # Add additional tardist bundles
+  config.vm.provision "file", source: "files/.", destination: "/vagrant/irix/bundles"
+
   # Create XFS-formatted disk for extracted CD images
   config.vm.provider "virtualbox" do |v|
     unless File.exist?(installdisk)

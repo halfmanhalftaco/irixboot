@@ -144,6 +144,11 @@ copydist(){
 		mkdir nekodeps
 		tar xvf "${nekodeps}" -C nekodeps
 	fi
+
+	echo "Handling bundles"
+	pushd /vagrant/irix/bundles
+	gunzip *.gz
+	popd
 }
 
 sync_pkgs(){

@@ -60,6 +60,6 @@ find . -name "fx.*" -type f | sed 's#./#bootp():/#'
 
 echo "__________________ Paths for Inst __________________"
 find . -name dist -type d | sed 's#./#irixboot:#'
-echo "__________________ Paths for Nekodeps __________________"
-echo "irixboot:nekodeps"
 
+echo "__________________ Paths for extra bundles __________________"
+find . -name "*.tardist" | sed 's#./#irixboot:#'
