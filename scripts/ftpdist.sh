@@ -34,6 +34,11 @@ http://ftp.irisware.net/pub/irix-os/extras/sgipostscriptfonts.tar.gz"
 ## Nekodeps
 nekodeps="nekodeps_custom.0.0.1.tardist"
 
+## Bootstrap
+bootstrap="http://ftp.irisware.net/pub/projects/irixboot/openssh_bundle-0.0.1.tardist.gz
+http://ftp.irisware.net/pub/projects/irixboot/python_bundle-0.0.1.tardist.gz
+http://ftp.irisware.net/pub/projects/irixboot/wget_bundle-0.0.1.tardist.gz"
+
 ### Partition/Format our data disk (will hold IRIX distribution)
 function formatdisk {
 	echo "Formatting /dev/sdb..."
@@ -145,9 +150,16 @@ copydist(){
 		tar xvf "${nekodeps}" -C nekodeps
 	fi
 
-	echo "Handling bundles"
+	echo "Handling bootstrap bundles"
+	mkdir -p /vagrant/irix/bundles
 	pushd /vagrant/irix/bundles
-	gunzip *.gz
+	for _url in $bootstrap ; do 
+		_an=$(basename "${_url}")
+		if [[ ! -e "${_an}" ]] ; then
+			wget --quiet -nc "${_url}"
+			tar xvzf "${_an}"
+		fi
+	done
 	popd
 }
 
