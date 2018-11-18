@@ -6,3 +6,6 @@ disk.vdi
 .vagrant
 .idea
 irix/*1
+irix/*
+.DS_Store
+.vscode/*
