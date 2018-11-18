@@ -1,6 +1,16 @@
 ---
+- name: generate scripts for virt
+  hosts: all
+  tasks:
+  - import_role:
+     name: script_setup
 - name: generate irix_ansible inventory file from Vagrant parameters
   hosts: all
   tasks:
   - import_role:
      name: inventory_gen
+- name: run virt scripts
+  hosts: all
+  tasks:
+  - import_role:
+     name: script_exec

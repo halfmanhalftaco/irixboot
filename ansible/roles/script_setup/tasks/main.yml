@@ -1,0 +1,37 @@
+- name: generate boot
+  template:
+    src: templates/boot.sh.j2
+    dest: /vagrant/scripts/boot.sh
+    owner: vagrant
+    group: vagrant
+    mode: 0744
+- name: generate dist
+  template:
+    src: templates/dist.sh.j2
+    dest: /vagrant/scripts/dist.sh
+    owner: vagrant
+    group: vagrant
+    mode: 0744
+  when: installmethod == "cd"
+- name: generate ftpdist
+  template:
+    src: templates/ftpdist.sh.j2
+    dest: /vagrant/scripts/dist.sh
+    owner: vagrant
+    group: vagrant
+    mode: 0744
+  when: installmethod == "ftp"
+- name: generate init
+  template:
+    src: templates/init.sh.j2
+    dest: /vagrant/scripts/init.sh
+    owner: vagrant
+    group: vagrant
+    mode: 0744
+- name: generate watchlogs
+  template:
+    src: templates/watchlogs.sh.j2
+    dest: /vagrant/scripts/watchlogs.sh
+    owner: vagrant
+    group: vagrant
+    mode: 0744

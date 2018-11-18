@@ -28,6 +28,41 @@ hostip = '192.168.0.1'
 # this name can change from en0 to something else. verify it.
 bridgenic = 'en0'
 
+# FTP urls
+
+## IRIX foundation
+foundation="http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/foundation1.tar.gz
+http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/foundation2.tar.gz
+http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/onc3nfs.tar.gz"
+## 6.5.30 overlays
+overlay="http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/irix-6.5.30/apps.tar.gz
+http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/irix-6.5.30/disc1.tar.gz
+http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/irix-6.5.30/disc2.tar.gz
+http://ftp.irisware.net/pub/irix-os/irix-6.5/network-installs/irix-6.5.30/disc3.tar.gz"
+
+## Dev
+devel="http://ftp.irisware.net/pub/irix-os/devel/developmentlibraries.tar.gz
+http://ftp.irisware.net/pub/irix-os/devel/mipspro-74/devf_13.tar.gz
+http://ftp.irisware.net/pub/irix-os/devel/mipspro-74/mipspro-7.4.3m.tar
+http://ftp.irisware.net/pub/irix-os/devel/mipspro-74/mipspro744update.tar.gz
+http://ftp.irisware.net/pub/irix-os/devel/mipspro-74/mipspro_c.tar.gz
+http://ftp.irisware.net/pub/irix-os/devel/mipspro-74/mipspro_cee.tar.gz
+http://ftp.irisware.net/pub/irix-os/devel/mipspro-74/mipspro_cpp.tar.gz
+http://ftp.irisware.net/pub/irix-os/devel/mipspro-74/mipsproap.tar.gz
+http://ftp.irisware.net/pub/irix-os/devel/mipspro-74/prodev.tar.gz"
+## Extras
+extras="http://ftp.irisware.net/pub/irix-os/extras/perfcopilot.tar.gz
+http://ftp.irisware.net/pub/irix-os/extras/sgipostscriptfonts.tar.gz"
+
+## Nekodeps
+nekodeps="nekodeps_custom.0.0.1.tardist"
+
+## Bootstrap
+bootstrap="http://ftp.irisware.net/pub/projects/irixboot/openssh_bundle-0.0.1.tardist.gz
+http://ftp.irisware.net/pub/projects/irixboot/python_bundle-0.0.1.tardist.gz
+http://ftp.irisware.net/pub/projects/irixboot/wget_bundle-0.0.1.tardist.gz"
+
+
 ##### 
 # end of settings
 #####
@@ -50,13 +85,6 @@ Vagrant.configure("2") do |config|
     end
     v.customize ['storageattach', :id, '--storagectl', 'SATA Controller', '--port', 1, '--device', 0, '--type', 'hdd', '--medium', installdisk]
   end
-  if installmethod == "cd"
-    # Run local setup scripts
-    config.vm.provision "shell", path: "scripts/init.sh",run: 'always', args: installmethod
-    config.vm.provision "shell", path: "scripts/dist.sh", run: 'always', args: irixversion
-  elsif installmethod == "ftp"
-    config.vm.provision "shell", path: "scripts/ftpdist.sh", run: 'always', args: irixversion
-  end
 end
 
 Vagrant.configure("2") do |config|
@@ -64,7 +92,14 @@ Vagrant.configure("2") do |config|
     ansible.verbose = "v"
     ansible.playbook = "ansible/irix_ansible_setup.yml"
     ansible.extra_vars = {
+        installmethod: installmethod,
         irixversion: irixversion,
+        foundation: foundation,
+        overlay: overlay,
+        extras: extras,
+        nekodeps: nekodeps,
+        bootstrap: bootstrap,
+        devel: devel,
         installmirror: installmirror,
         clientname: clientname,
         clientdomain: clientdomain,

@@ -1,0 +1,6 @@
+- name: Run init
+  command: /vagrant/scripts/init.sh
+  become: true
+- name: Run dist
+  command: /vagrant/scripts/dist.sh
+  become: true
