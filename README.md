@@ -30,6 +30,7 @@ I am not sure what range of IRIX versions this will work with or what SGI machin
 	* SGI Indy
 	* SGI Indigo2
 	* SGI Octane
+	* SGI O2
 
 * Operating Systems
 	* IRIX 4D1 4.0.5
@@ -38,7 +39,7 @@ I am not sure what range of IRIX versions this will work with or what SGI machin
 	* IRIX 6.5.22
 	* IRIX 6.5.30
 
-I suspect that most other hardware and OS versions released in those timeframes will also work (e.g. O2, server variants, etc.) SGI obviously kept the netboot/install process pretty consistent so I'd expect it to work on probably any MIPS-based SGI system. 
+I suspect that most other hardware and OS versions released in those timeframes will also work (e.g. server variants, etc.) SGI obviously kept the netboot/install process pretty consistent so I'd expect it to work on probably any MIPS-based SGI system. 
 
 (feel free to send me a Personal IRIS or Tezro or something to test it on!)
 
@@ -116,7 +117,7 @@ If you need to boot `fx` to label/partition your disk, open the command monitor 
 
 where `/overlay30/stand/fx.ARCS` is a path relative to your selected IRIX version in the directory structure from above. When installing IRIX 6.5.x you'll want to use the partitioner included with the overlay set (first disc), but prior versions of IRIX usually locate the partitioner on the first install disc.
 
- Use `fx.ARCS` for R4xxx machines and `fx.64` for R5000+ machines (and others for older machines, I assume). Once `irixboot` finishes setup it lists any detected partitioners to help you find the correct path.
+ Use `fx.ARCS` for R4xxx machines and all SGI O2 machines (SGI O2 R5k and R10k run in 32-bit mode).  Use `fx.64` for R5000+ machines (and others for older machines, I assume). Once `irixboot` finishes setup it lists any detected partitioners to help you find the correct path.
 
 ### inst (IRIX installer)
 	
