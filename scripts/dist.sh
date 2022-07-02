@@ -55,10 +55,19 @@ function copydist {
 
 		for i in /vagrant/irix/$IRIXVERS/$SUB/*
 		do
-			echo "Copying files from \"$i\"..."
-			mount -o loop -t efs "$i" /mnt
-			rsync -aq /mnt/ /irix/$SUB
-			umount /mnt
+			case "$( basename "$i" )" in
+			*.tar.gz)	# Tar/Gzip
+				echo "Extracting files from \"$i\"..."
+				mkdir /irix/$SUB
+				tar -C /irix/$SUB -xzpf "$i"
+				;;
+			*)		# EFS image
+				echo "Copying files from \"$i\"..."
+				mount -o loop -t efs "$i" /mnt
+				rsync -aq /mnt/ /irix/$SUB
+				umount /mnt
+				;;
+			esac
 		done
 	done
 	
