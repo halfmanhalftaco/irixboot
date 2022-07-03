@@ -64,7 +64,6 @@ function copydist {
 		# Convert BIN/CUE files (e.g. archive.org) to raw EFS
 		for i in /vagrant/irix/$IRIXVERS/$SUB/*.bin
 		do
-			echo "Converting BIN/CUE image \"$i\" to ISO..."
 			i_bn="${i%%.bin}"
 			img="${i_bn}.img"
 			cue="${i_bn}.cue"
@@ -72,6 +71,7 @@ function copydist {
 			# We assume there is only one "ISO" image generated.
 			if [ -f "$cue" ] && [ ! -f "${i_bn}-01.iso" ] ; then
 				# This will create ${i_bn}-01.iso
+				echo "Converting BIN/CUE image \"$i\" to ISO..."
 				bchunk "$i" "$cue" "${i_bn}-"
 			fi
 		done
