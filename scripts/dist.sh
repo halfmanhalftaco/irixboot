@@ -29,6 +29,14 @@ function formatdisk {
 }
 
 
+### Extract an image from the given source file to the specified directory
+function extractefs {
+	mount -t efs "$1" /mnt
+	rsync -aq /mnt/ $2
+	umount /mnt
+}
+
+
 ### Populate the distribution disk with CD images stored in irix/<IRIX VERSION>
 ### Images must be in subfolders - multiple images in a directory will be copied on top of one another
 ### e.g.
@@ -53,19 +61,54 @@ function copydist {
 		SUB=${d::-1}
 		mkdir -p /irix/$SUB
 
+		# Convert BIN/CUE files (e.g. archive.org) to raw EFS
+		for i in /vagrant/irix/$IRIXVERS/$SUB/*.bin
+		do
+			echo "Converting BIN/CUE image \"$i\" to ISO..."
+			i_bn="${i%%.bin}"
+			img="${i_bn}.img"
+			cue="${i_bn}.cue"
+			# Skip .bin missing .cue, or already extracted
+			if [ -f "$cue" ] ; then
+				# This will create ${i_bn}-01.iso
+				bchunk "$i" "$cue" "${i_bn}-"
+			fi
+		done
+
 		for i in /vagrant/irix/$IRIXVERS/$SUB/*
 		do
 			case "$( basename "$i" )" in
 			*.tar.gz)	# Tar/Gzip
 				echo "Extracting files from \"$i\"..."
-				mkdir /irix/$SUB
+				if [ ! -d /irix/$SUB ]; then
+					mkdir /irix/$SUB
+				fi
 				tar -C /irix/$SUB -xzpf "$i"
 				;;
-			*)		# EFS image
+			*.bin|*.cue)	# BIN/CUE image -- ignore
+				echo "Ignoring BIN/CUE image \"$i\""
+				;;
+			*.iso)		# "ISO" image
 				echo "Copying files from \"$i\"..."
-				mount -o loop -t efs "$i" /mnt
-				rsync -aq /mnt/ /irix/$SUB
-				umount /mnt
+				# loop-mount the "ISO" image, it will
+				# be a raw SGI disklabel (i.e. like a HDD),
+				# not really an ISO9660 image.  We call it an "ISO"
+				# because bchunk does -- it won't let us call it
+				# anything else.
+				d="$( losetup -f -P -r --show "$i" )"
+				# EFS image is in partition 8
+				extractefs ${d}p8 /irix/$SUB
+				# Unmount loop image
+				losetup -d $d
+				;;
+			*)		# EFS image (assumed)
+				echo "Copying files from \"$i\"..."
+				# To keep extractefs simple, we'll do our own
+				# loop-mount here.
+				d="$( losetup -f -r --show "$i" )"
+				extractefs "$d" /irix/$SUB
+				# Unmount loop image
+				losetup -d $d
 				;;
 			esac
 		done
