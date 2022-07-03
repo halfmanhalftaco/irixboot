@@ -68,8 +68,9 @@ function copydist {
 			i_bn="${i%%.bin}"
 			img="${i_bn}.img"
 			cue="${i_bn}.cue"
-			# Skip .bin missing .cue, or already extracted
-			if [ -f "$cue" ] ; then
+			# Skip .bin missing .cue, or already converted
+			# We assume there is only one "ISO" image generated.
+			if [ -f "$cue" ] && [ ! -f "${i_bn}-01.iso" ] ; then
 				# This will create ${i_bn}-01.iso
 				bchunk "$i" "$cue" "${i_bn}-"
 			fi
@@ -95,7 +96,8 @@ function copydist {
 				# not really an ISO9660 image.  We call it an "ISO"
 				# because bchunk does -- it won't let us call it
 				# anything else.
-				d="$( losetup -f -P -r --show "$i" )"
+				d="$( losetup -f -r --show "$i" )"
+				partprobe ${d}
 				# EFS image is in partition 8
 				extractefs ${d}p8 /irix/$SUB
 				# Unmount loop image
