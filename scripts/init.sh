@@ -18,7 +18,7 @@ invoke-rc.d rsyslog restart
 cp /etc/hosts /etc/hosts.irixboot
 
 echo "Installing packages..."
-apt-get update && apt-get -qq -y install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump
+apt-get update && apt-get -qq -y install tftpd-hpa isc-dhcp-server rsh-server dnsmasq mksh parted xfsprogs rsync tcpdump bchunk
 
 # work around dnsmasq package bug with newer dns-zone-data package
 mv /usr/share/dns/root.ds /usr/share/dns/root.ds.disabled
